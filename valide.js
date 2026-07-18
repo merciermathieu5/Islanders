@@ -12,7 +12,7 @@ function egal(a, b, msg){ ok(a===b, msg + ` (obtenu: ${JSON.stringify(a)}, atten
 function proche(a, b, tol, msg){ ok(a!==null && a!==undefined && Math.abs(a-b)<=tol, msg + ` (obtenu: ${a}, attendu: ~${b})`); }
 function tableauEgal(a, b, msg){ ok(JSON.stringify(a)===JSON.stringify(b), msg + ` (obtenu: ${JSON.stringify(a)}, attendu: ${JSON.stringify(b)})`); }
 
-const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
 
 /* Constantes propres à l'équipe (recote ushl.ca du 8 juillet 2026).
    masseSousContrat = somme des salaires CT>0 de l'alignement PRO — recoupée
@@ -733,6 +733,292 @@ const ATTENDU = {
   doc.getElementById('ovd_pa').value = '';
   doc.getElementById('ovd_pa').dispatchEvent(new W.Event('input'));
   egal(doc.getElementById('ovdValeur').textContent, '—', 'Cote manquante → aucun résultat');
+
+  console.log('— Alignement des trios (règlements 1.1.1 et 1.1.2)');
+  // bassin de test : signés du club + ajouts (6 attaquants, 2 défenseurs, 2 gardiens)
+  // Bassin déterministe, indépendant de l'équipe : on retire les signés du club
+  // et on peuple la Composition d'un effectif synthétique fixe (6C, 4AG, 3AD, 6D, 2G).
+  W.localStorage.setItem(S.CLES_LS.trios, JSON.stringify(S.TRIOS_VIDES()));
+  W.localStorage.removeItem(S.CLES_LS.resign);
+  const signesClub = S.SECOURS_ROSTER.filter(j=>!j.backup && j.ct>0).map(j=>S.normaliserNom(j.nom));
+  const ajoutsTrios = [];
+  const groupesAjouts = [['C',6,84],['AG',4,80],['AD',3,78],['D',6,79],['G',2,80]];
+  const NOMS_AJOUTS = {C:'Centre', AG:'AilierG', AD:'AilierD', D:'Defenseur', G:'Gardien'};
+  const NUMS = ['Un','Deux','Trois','Quatre','Cinq','Six'];
+  for (const [po,n,ovBase] of groupesAjouts)
+    for (let x=0;x<n;x++)
+      ajoutsTrios.push({nom:`${NOMS_AJOUTS[po]} ${NUMS[x]}`, po, ov:ovBase-x*2, salaire:1000000});
+  W.localStorage.setItem(S.CLES_LS.compo, JSON.stringify({retires: signesClub, ajouts: ajoutsTrios}));
+  const poolTrios = S.joueursComposition();
+  egal(poolTrios.filter(j=>j.po==='G').length, 2, 'Bassin déterministe : 2 gardiens');
+  egal(poolTrios.filter(j=>j.po!=='G').length, 19, 'Bassin déterministe : 19 patineurs (6C, 4AG, 3AD, 6D)');
+  ok(!!doc.querySelector('nav button[data-vue="trios"]'), 'Onglet Trios présent dans la navigation');
+  S.rendreTrios();
+  const tuilesF = [...doc.querySelectorAll('#vue-trios button.tuile[data-zone="trio"]')];
+  const tuilesD = [...doc.querySelectorAll('#vue-trios button.tuile[data-zone="duo"]')];
+  const tuilesG = [...doc.querySelectorAll('#vue-trios button.tuile[data-zone="g"]')];
+  egal(tuilesF.length, 12, '12 tuiles d\'attaquants (4 trios)');
+  egal(tuilesD.length, 6, '6 tuiles de défenseurs (3 duos)');
+  egal(tuilesG.length, 2, 'Tuiles du partant et du substitut');
+  ok(tuilesF.every(t=>t.classList.contains('vide')), 'Tuiles vides au départ (état «+ Choisir»)');
+  const poDe = nom => poolTrios.find(p=>p.nom===nom)?.po;
+  const choixDe = ()=>[...doc.querySelectorAll('#tuileModalListe button.choix-joueur')].map(b=>b.dataset.nom).filter(Boolean);
+  tuilesG[0].click();
+  ok(doc.getElementById('tuileModalFond').hidden === false, 'Clic sur une tuile : le sélecteur s\'ouvre');
+  ok(choixDe().every(n=>poDe(n)==='G'), 'Tuiles de gardiens : seuls des gardiens offerts (art. 1.1.1)');
+  ok(doc.getElementById('tuileModalTitre').textContent.includes('partant'), 'Titre du sélecteur : la case visée');
+  doc.getElementById('tuileModalX').click();
+  ok(doc.getElementById('tuileModalFond').hidden === true, 'Fermeture du sélecteur par le ×');
+  tuilesF[0].click();
+  ok(choixDe().every(n=>poDe(n)!=='G'), 'Tuiles de patineurs : aucun gardien offert (art. 1.1.1)');
+  ok(choixDe().some(n=>poDe(n)==='D'), 'Un défenseur peut être placé à l\'attaque (position libre, art. 1.1.1)');
+  doc.getElementById('tuileModalX').click();
+
+  // validation pure : construire un alignement complet légal
+  const attq = poolTrios.filter(j=>S.EST_ATTAQUANT ? S.EST_ATTAQUANT(j.po) : (j.po==='C'||j.po==='AG'||j.po==='AD')).map(j=>j.nom);
+  const defs = poolTrios.filter(j=>j.po==='D').map(j=>j.nom);
+  const pats = poolTrios.filter(j=>j.po!=='G').map(j=>j.nom);
+  const gars = poolTrios.filter(j=>j.po==='G').sort((a,b)=>b.ov-a.ov).map(j=>j.nom);
+  const patsRestants = pats.filter(n=>!attq.slice(0,12).includes(n));
+  const legal = {
+    trios: [attq.slice(0,3), attq.slice(3,6), attq.slice(6,9), attq.slice(9,12)],
+    duos: [patsRestants.slice(0,2), patsRestants.slice(2,4), patsRestants.slice(4,6)],
+    gardiens: [gars[0], gars[1]]
+  };
+  let v = S.validerAlignementTrios(legal, poolTrios);
+  egal(v.erreurs.length, 0, 'Alignement complet de 20 cases : aucune infraction');
+  egal(v.nbRemplis, 20, '20 cases remplies');
+  egal(v.nbDistincts, 20, '20 joueurs distincts');
+  ok(v.horsPosition >= 1, 'Patineurs hors position naturelle comptés à titre indicatif (permis)');
+
+  // double quart légal : trio 1 et trio 4 (art. 1.1.2)
+  const dq = JSON.parse(JSON.stringify(legal));
+  dq.trios[3][2] = dq.trios[0][0];
+  v = S.validerAlignementTrios(dq, poolTrios);
+  egal(v.erreurs.length, 0, 'Double quart 1-4 : permis (art. 1.1.2)');
+  ok(v.avertissements.some(a=>a.includes('20 habillés')), 'Rappel des 20 habillés quand le double quart est utilisé');
+
+  // double quart illégal : trios 2 et 3
+  const dq23 = JSON.parse(JSON.stringify(legal));
+  dq23.trios[2][2] = dq23.trios[1][0];
+  v = S.validerAlignementTrios(dq23, poolTrios);
+  ok(v.erreurs.length===1 && v.erreurs[0].includes('1-4, 2-4 et 3-4'), 'Double quart 2-3 : infraction (art. 1.1.2)');
+
+  // trois trios pour un même joueur
+  const dq3 = JSON.parse(JSON.stringify(legal));
+  dq3.trios[1][1] = dq3.trios[0][0]; dq3.trios[3][1] = dq3.trios[0][0];
+  v = S.validerAlignementTrios(dq3, poolTrios);
+  ok(v.erreurs.some(e=>e.includes('se limite à deux lignes')), 'Trois trios pour un même joueur : infraction');
+
+  // même joueur deux fois dans le même trio
+  const memeTrio = JSON.parse(JSON.stringify(legal));
+  memeTrio.trios[0][1] = memeTrio.trios[0][0];
+  v = S.validerAlignementTrios(memeTrio, poolTrios);
+  ok(v.erreurs.some(e=>e.includes('Trio 1')), 'Même joueur deux fois dans un trio : infraction');
+
+  // défenseur dans deux duos
+  const duoDouble = JSON.parse(JSON.stringify(legal));
+  duoDouble.duos[1][0] = duoDouble.duos[0][0];
+  v = S.validerAlignementTrios(duoDouble, poolTrios);
+  ok(v.erreurs.some(e=>e.includes('duos')), 'Défenseur dans deux duos : infraction (aucune 4e paire, art. 1.1.2)');
+
+  // gardiens : identiques, ou hors du filet
+  const gDouble = JSON.parse(JSON.stringify(legal));
+  gDouble.gardiens = [gars[0], gars[0]];
+  v = S.validerAlignementTrios(gDouble, poolTrios);
+  ok(v.erreurs.some(e=>e.includes('différents')), 'Partant = substitut : infraction');
+  const gAttaque = JSON.parse(JSON.stringify(legal));
+  gAttaque.trios[3][2] = gars[1];
+  v = S.validerAlignementTrios(gAttaque, poolTrios);
+  ok(v.erreurs.some(e=>e.includes('case de patineur')), 'Gardien placé à l\'attaque : infraction (art. 1.1.1)');
+
+  // patineur en attaque ET en défense : avertissement, pas d'infraction
+  const mixte = JSON.parse(JSON.stringify(legal));
+  mixte.duos[0][0] = mixte.trios[0][0];
+  v = S.validerAlignementTrios(mixte, poolTrios);
+  ok(v.avertissements.some(a=>a.includes('attaque ET en défense')) , 'Attaque et défense à la fois : avertissement');
+
+  // joueur disparu de la composition
+  const fantome = JSON.parse(JSON.stringify(legal));
+  fantome.trios[0][0] = 'Joueur Fantome';
+  v = S.validerAlignementTrios(fantome, poolTrios);
+  ok(v.avertissements.some(a=>a.includes('plus dans la composition')), 'Joueur retiré de la composition : avertissement');
+
+  // persistance : placer un joueur par le sélecteur, puis libérer la case
+  tuilesG[0].click();
+  [...doc.querySelectorAll('#tuileModalListe button.choix-joueur')].find(b=>b.dataset.nom===gars[0]).click();
+  ok((W.localStorage.getItem(S.CLES_LS.trios)||'').includes(gars[0]), 'Choix sauvegardé dans la mémoire locale');
+  const svgG = tuilesG[0].querySelector('svg.chandail');
+  ok(!!svgG, 'La tuile porte un chandail SVG');
+  const textesG = [...svgG.querySelectorAll('text')].map(t=>t.textContent);
+  ok(textesG.includes(gars[0].split(' ').pop().toUpperCase()), 'Plaque du chandail : nom de famille du joueur placé');
+  const ovG = poolTrios.find(p=>p.nom===gars[0]).ov;
+  ok(textesG.includes(String(ovG)), 'Numéro dans le dos = OV du joueur');
+  ok(tuilesG[0].title.includes(gars[0]), 'Infobulle : nom complet du joueur');
+  ok(!tuilesG[0].classList.contains('vide'), 'La tuile n\'est plus marquée vide');
+  const svgVide = tuilesF[0].querySelector('svg.chandail');
+  ok(!!svgVide && [...svgVide.querySelectorAll('text')].some(t=>t.textContent==='CHOISIR'),
+     'Tuile vide : chandail neutre marqué CHOISIR');
+  tuilesG[0].click();
+  const btnLiberer = doc.querySelector('#tuileModalListe button.choix-joueur.liberer');
+  ok(!!btnLiberer, 'Option «Libérer la case» offerte quand la tuile est occupée');
+  btnLiberer.click();
+  ok(tuilesG[0].classList.contains('vide'), 'Case libérée : la tuile redevient vide');
+
+  // proposition automatique par OV
+  doc.getElementById('btnTriosProposer').click();
+  const propose = S.litTrios();
+  v = S.validerAlignementTrios(propose, poolTrios);
+  egal(v.nbRemplis, 20, 'Proposition automatique : 20 cases remplies');
+  egal(v.erreurs.length, 0, 'Proposition automatique : aucune infraction');
+  egal(propose.gardiens[0], gars[0], 'Partant proposé = meilleur OV des gardiens');
+  ok(propose.trios.flat().every(n=>poDe(n)!=='G'), 'Aucun gardien dans les trios proposés');
+  ok(propose.trios.flat().filter(Boolean).every(n=>['C','AG','AD'].includes(poDe(n))),
+     'Proposition : aucun défenseur placé à l\'attaque');
+  ok(propose.duos.flat().filter(Boolean).every(n=>poDe(n)==='D'),
+     'Proposition : duos réservés aux défenseurs naturels');
+  egal(v.horsPosition, 0, 'Proposition : zéro joueur hors position naturelle');
+  const colAD = propose.trios.map(t=>t[2]);
+  egal(colAD.filter(n=>poDe(n)==='AD').length, 3, 'Colonne AD : les 3 ailiers droits naturels d\'abord');
+  ok(['C','AG'].includes(poDe(colAD.find(n=>poDe(n)!=='AD'))),
+     'Case AD sans titulaire naturel : complétée par un autre attaquant inutilisé');
+
+  // vider
+  doc.getElementById('btnTriosVider').click();
+  ok(S.litTrios().trios.flat().every(n=>!n), 'Bouton Vider : toutes les cases libérées');
+
+  // ---- Unités spéciales ----
+  console.log('— Unités spéciales (2 vagues par groupe, positions libres)');
+  egal(doc.querySelectorAll('#vue-trios button.tuile[data-zone="an5"]').length, 10, 'AN à 5 : 2 vagues de 5 cases');
+  egal(doc.querySelectorAll('#vue-trios button.tuile[data-zone="an4"]').length, 8, 'AN à 4 : 2 vagues de 4 cases');
+  egal(doc.querySelectorAll('#vue-trios button.tuile[data-zone="in4"]').length, 8, 'IN à 4 : 2 vagues de 4 cases');
+  egal(doc.querySelectorAll('#vue-trios button.tuile[data-zone="in3"]').length, 6, 'IN à 3 : 2 vagues de 3 cases');
+  egal(doc.querySelectorAll('#vue-trios button.tuile').length, 52, '52 tuiles au total (20 à 5c5 + 32 spéciales)');
+  doc.querySelector('#vue-trios button.tuile[data-zone="an5"]').click();
+  ok(choixDe().every(n=>poDe(n)!=='G'), 'Aucun gardien offert sur les unités spéciales');
+  doc.getElementById('tuileModalX').click();
+
+  // 5 attaquants sur une vague d'AN : permis (positions sans importance)
+  const cinqAv = JSON.parse(JSON.stringify(legal));
+  cinqAv.an5 = [attq.slice(0,5), attq.slice(5,10)];
+  v = S.validerAlignementTrios(cinqAv, poolTrios);
+  egal(v.erreurs.length, 0, 'Cinq attaquants sur une vague d\'AN à 5 : aucune infraction (positions libres)');
+  egal(v.specRemplis, 10, 'Cases spéciales remplies comptées (10/32)');
+
+  // même joueur sur les 2 vagues d'un même groupe : interdit
+  const deuxVagues = JSON.parse(JSON.stringify(cinqAv));
+  deuxVagues.an5[1][0] = deuxVagues.an5[0][0];
+  v = S.validerAlignementTrios(deuxVagues, poolTrios);
+  ok(v.erreurs.some(e=>e.includes('2 vagues')), 'Joueur sur les 2 vagues de l\'AN à 5 : infraction (art. 1.1.2)');
+  const deuxVaguesIn = JSON.parse(JSON.stringify(legal));
+  deuxVaguesIn.in3 = [[defs[0], defs[1], attq[0]], [defs[0], attq[1], attq[2]]];
+  v = S.validerAlignementTrios(deuxVaguesIn, poolTrios);
+  ok(v.erreurs.some(e=>e.includes('2 vagues') && e.includes('infériorité')), 'Joueur sur les 2 vagues de l\'IN à 3 : infraction');
+
+  // même joueur deux fois dans la même vague
+  const dupVague = JSON.parse(JSON.stringify(legal));
+  dupVague.an4 = [[attq[0], attq[0], attq[1], attq[2]], ['','','','']];
+  v = S.validerAlignementTrios(dupVague, poolTrios);
+  ok(v.erreurs.some(e=>e.includes('vague 1')), 'Même joueur deux fois dans une vague : infraction');
+
+  // gardien sur une unité spéciale : infraction
+  const gSpec = JSON.parse(JSON.stringify(legal));
+  gSpec.in4 = [[gars[1], defs[0], defs[1], attq[0]], ['','','','']];
+  v = S.validerAlignementTrios(gSpec, poolTrios);
+  ok(v.erreurs.some(e=>e.includes('case de patineur')), 'Gardien sur une unité spéciale : infraction (art. 1.1.1)');
+
+  // joueur des unités spéciales absent des 20 habillés : avertissement
+  const nonHabille = JSON.parse(JSON.stringify(legal));
+  nonHabille.trios[3][2] = '';
+  const excluReel = pats.find(n=>!nonHabille.trios.flat().includes(n) && !nonHabille.duos.flat().includes(n));
+  ok(!!excluReel, 'Un patineur non habillé disponible pour le scénario');
+  nonHabille.an5 = [[excluReel, '', '', '', ''], ['','','','','']];
+  v = S.validerAlignementTrios(nonHabille, poolTrios);
+  ok(v.avertissements.some(a=>a.includes('sans être parmi les habillés')), 'Unité spéciale avec un joueur non habillé : avertissement');
+
+  // proposition automatique : la feuille complète, unités spéciales incluses
+  doc.getElementById('btnTriosProposer').click();
+  const feuille = S.litTrios();
+  v = S.validerAlignementTrios(feuille, poolTrios);
+  egal(v.specRemplis, 32, 'Proposition automatique : 32 cases spéciales remplies');
+  egal(v.erreurs.length, 0, 'Proposition automatique : aucune infraction, spéciales incluses');
+  ok(!v.avertissements.some(a=>a.includes('sans être parmi les habillés')),
+     'Unités spéciales proposées à même les 20 habillés');
+  for (const z of ['an5','an4','in4','in3']){
+    const v1 = new Set(feuille[z][0].filter(Boolean));
+    ok(feuille[z][1].filter(Boolean).every(n=>!v1.has(n)), `Proposition ${z.toUpperCase()} : aucun joueur sur les 2 vagues`);
+  }
+  doc.getElementById('btnTriosVider').click();
+  ok(['an5','an4','in4','in3'].every(z=>S.litTrios()[z].flat().every(n=>!n)), 'Vider libère aussi les unités spéciales');
+
+  // ---- Glisser-déposer ----
+  console.log('— Glisser-déposer (banc des joueurs, double quart, échanges)');
+  const banc = doc.getElementById('bancJoueurs');
+  ok(!!banc, 'Banc des joueurs présent');
+  egal(banc.querySelectorAll('.banc-joueur').length, poolTrios.length, 'Le banc offre tous les joueurs de la Composition');
+  ok([...banc.querySelectorAll('.banc-joueur')].every(b=>b.getAttribute('draggable')==='true' && !b.querySelector('svg')),
+     'Chaque joueur du banc : libellé texte glissable, sans chandail');
+  ok([...banc.querySelectorAll('.banc-joueur')].every(b=>{
+      const j = poolTrios.find(p=>p.nom===b.dataset.nom);
+      return j && b.textContent.trim().startsWith(`${j.po} - ${j.nom}`) && b.textContent.includes(`(${j.ov})`);
+    }), 'Banc : chaque libellé = PO - Nom (OV)');
+  // le chandail n'apparaît qu'une fois le joueur déposé sur une case
+  console.log('— Mise en page : attaque | défense+gardiens, unités spéciales plus bas');
+  const rangees5c5 = doc.querySelectorAll('#vue-trios .trios-colonnes');
+  egal(rangees5c5.length, 2, 'Deux rangées de colonnes (5c5 en haut, spéciales en bas)');
+  const [rang5c5, rangSpec] = rangees5c5;
+  ok(rang5c5.children[0].textContent.includes('Attaque') && !rang5c5.children[0].textContent.includes('Défense'),
+     'Colonne de gauche : les trios d\'attaque');
+  ok(rang5c5.children[1].textContent.includes('Défense') && rang5c5.children[1].textContent.includes('Gardiens'),
+     'Colonne de droite : duos de défenseurs et gardiens');
+  egal(rangSpec.id, 'uniteSpeciales', 'Les unités spéciales forment la rangée du bas');
+  ok(rangSpec.children[0].textContent.includes('Avantage numérique à 5') && rangSpec.children[0].textContent.includes('Avantage numérique à 4'),
+     'AN à 5 et à 4 regroupés à gauche des spéciales');
+  ok(rangSpec.children[1].textContent.includes('Infériorité numérique à 4') && rangSpec.children[1].textContent.includes('Infériorité numérique à 3'),
+     'IN à 4 et à 3 regroupés à droite des spéciales');
+  ok(rang5c5.compareDocumentPosition(rangSpec) & 4, 'Les spéciales viennent après le 5 contre 5');
+  const evt = (type)=>new W.Event(type, {bubbles:true, cancelable:true});
+  const bancDe = nom => [...banc.querySelectorAll('.banc-joueur')].find(b=>b.dataset.nom===nom);
+  const tuileDe = (zone,i,k)=>doc.querySelector(`#vue-trios button.tuile[data-zone="${zone}"][data-i="${i}"][data-k="${k}"]`);
+  const glisser = (source, cible)=>{ source.dispatchEvent(evt('dragstart')); cible.dispatchEvent(evt('drop')); };
+
+  const at1 = attq[0];
+  glisser(bancDe(at1), tuileDe('trio',0,0));
+  egal(S.litTrios().trios[0][0], at1, 'Banc → T1 : joueur placé et sauvegardé');
+  ok(tuileDe('trio',0,0).getAttribute('draggable')==='true', 'Tuile occupée : glissable');
+  ok(bancDe(at1).classList.contains('utilise') && bancDe(at1).title.includes('T1'),
+     'Banc : le joueur placé est estompé et son infobulle indique T1');
+  ok(tuileDe('trio',0,0).querySelector('svg.chandail'), 'Le chandail apparaît sur la case après le dépôt');
+
+  glisser(bancDe(at1), tuileDe('trio',3,0));
+  egal(S.litTrios().trios[3][0], at1, 'Reprise du banc → T4 : double quart posé');
+  egal(S.litTrios().trios[0][0], at1, 'Le joueur reste sur T1 (copie, pas déplacement)');
+  egal(S.validerAlignementTrios(S.litTrios(), poolTrios).erreurs.length, 0, 'Double quart 1-4 par glisser : conforme');
+
+  glisser(bancDe(at1), tuileDe('an5',0,0));
+  egal(S.litTrios().an5[0][0], at1, 'Reprise du banc → AN à 5 : joueur posé sur la vague');
+  ok(bancDe(at1).title.includes('AN'), 'Banc : infobulle enrichie de l\'étiquette AN');
+
+  const at2 = attq[1];
+  glisser(bancDe(at2), tuileDe('trio',0,1));
+  glisser(tuileDe('trio',0,0), tuileDe('trio',0,1));
+  egal(S.litTrios().trios[0][1], at1, 'Tuile → tuile : le joueur glissé prend la case');
+  egal(S.litTrios().trios[0][0], at2, 'Échange : l\'occupant précédent prend la case d\'origine');
+
+  glisser(tuileDe('trio',3,0), banc);
+  egal(S.litTrios().trios[3][0], '', 'Tuile redéposée sur le banc : case libérée');
+
+  glisser(bancDe(gars[0]), tuileDe('trio',2,0));
+  egal(S.litTrios().trios[2][0], '', 'Gardien glissé à l\'attaque : refusé (art. 1.1.1)');
+  glisser(bancDe(at2), tuileDe('g',0,0));
+  egal(S.litTrios().gardiens[0], '', 'Patineur glissé au filet : refusé (art. 1.1.1)');
+  glisser(bancDe(gars[1]), tuileDe('g',0,0));
+  egal(S.litTrios().gardiens[0], gars[1], 'Gardien glissé au filet : accepté');
+
+  doc.getElementById('btnTriosVider').click();
+
+  W.localStorage.removeItem(S.CLES_LS.compo);
+  W.localStorage.removeItem(S.CLES_LS.trios);
 
   console.log(`\n${total - echecs}/${total} vérifications réussies`);
   process.exit(echecs ? 1 : 0);
