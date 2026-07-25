@@ -97,25 +97,25 @@ const ATTENDU = {
   egal(Object.keys(S.MATRICES).length, 15, '15 matrices de profils');
   const nbStats = Object.values(S.MATRICES).reduce((a,m)=>a+Object.keys(m).length,0);
   egal(nbStats, 40, '40 tableaux de seuils au total');
-  tableauEgal(S.seuilsMatrice('ELITE','pts',82), [97,86,74,63,37,-1], 'Elite points OV 82');
-  tableauEgal(S.seuilsMatrice('ELITE','pts',70), [23,20,17,15,9,-1], 'OV 70 ramené au rang 73');
-  tableauEgal(S.seuilsMatrice('ELITE','pts',95), [117,104,90,77,45,-1], 'OV 95 ramené au rang 90');
-  tableauEgal(S.seuilsMatrice('DELITEQB','ppg',80), [3,2,1,0,-1,-5], 'DElite QB buts en PP OV 80');
+  tableauEgal(S.seuilsMatrice('ELITE','pts',82), [91,81,70,60,35,-1], 'Elite points OV 82 (révision 2026)');
+  tableauEgal(S.seuilsMatrice('ELITE','pts',70), [24,21,18,16,9,-1], 'OV 70 ramené au rang 73');
+  tableauEgal(S.seuilsMatrice('ELITE','pts',95), [110,97,84,72,42,3], 'OV 95 ramené au rang 90');
+  tableauEgal(S.seuilsMatrice('DELITEQB','ppg',80), [2,1,0,-1,-2,-5], 'DElite QB buts en PP OV 80 (révision 2026)');
   tableauEgal(S.seuilsMatrice('STARTER','ming',85), [0.98,0.91,0.84,0.77,0.64,-1], 'Starter MIN (ratio) constant');
-  tableauEgal(S.seuilsMatrice('BACKUP','psv',78), [908,899,890,881,872,-1], 'Backup Psv OV 78');
-  tableauEgal(S.seuilsMatrice('GRINDER','hits20',77), [2.55,2.35,2.15,1.95,1.75,-1], 'Grinder MEÉ/20 OV 77');
+  tableauEgal(S.seuilsMatrice('BACKUP','psv',78), [916,907,898,889,880,-1], 'Backup Psv OV 78 (révision 2026)');
+  tableauEgal(S.seuilsMatrice('GRINDER','hits20',77), [2.33,2.13,1.93,1.73,1.53,-1], 'Grinder MEÉ/20 OV 77 (révision 2026)');
   egal(S.seuilsMatrice('ELITE','inexistante',80), null, 'Statistique inconnue → null');
 
   console.log('— Statuts (tableau 18) : un degré exige de DÉPASSER STRICTEMENT son seuil');
-  const sE82 = S.seuilsMatrice('ELITE','pts',82); // [97,86,74,63,37,-1]
-  egal(S.statutSelonSeuils(97.5, sE82), 'memorable', '97,5 pts > 97 → Mémorable');
-  egal(S.statutSelonSeuils(97,   sE82), 'excellente', '97 pts = seuil Mémorable → Excellente (pas de Mémorable sans dépasser)');
-  egal(S.statutSelonSeuils(87,   sE82), 'excellente', '87 pts → Excellente');
-  egal(S.statutSelonSeuils(75,   sE82), 'satisfaisante', '75 pts → Satisfaisante');
-  egal(S.statutSelonSeuils(74,   sE82), 'correcte', '74 pts = seuil Satisfaisante → Correcte');
-  egal(S.statutSelonSeuils(64,   sE82), 'correcte', '64 pts → Correcte');
-  egal(S.statutSelonSeuils(38,   sE82), 'decevante', '38 pts → Décevante');
-  egal(S.statutSelonSeuils(37,   sE82), 'oublier', '37 pts = seuil Décevante → À oublier');
+  const sE82 = S.seuilsMatrice('ELITE','pts',82); // [91,81,70,60,35,-1]
+  egal(S.statutSelonSeuils(91.5, sE82), 'memorable', '91,5 pts > 91 → Mémorable');
+  egal(S.statutSelonSeuils(91,   sE82), 'excellente', '91 pts = seuil Mémorable → Excellente (pas de Mémorable sans dépasser)');
+  egal(S.statutSelonSeuils(82,   sE82), 'excellente', '82 pts > 81 → Excellente');
+  egal(S.statutSelonSeuils(71,   sE82), 'satisfaisante', '71 pts → Satisfaisante');
+  egal(S.statutSelonSeuils(70,   sE82), 'correcte', '70 pts = seuil Satisfaisante → Correcte');
+  egal(S.statutSelonSeuils(61,   sE82), 'correcte', '61 pts → Correcte');
+  egal(S.statutSelonSeuils(36,   sE82), 'decevante', '36 pts → Décevante');
+  egal(S.statutSelonSeuils(35,   sE82), 'oublier', '35 pts = seuil Décevante → À oublier');
   egal(S.statutSelonSeuils(null, sE82), 'indef', 'Valeur absente → à définir');
   egal(S.statutSelonSeuils(50, [60,null,null,null,null,null]), 'sousmemo', 'Seule cible Mémorable connue, non dépassée → sous le Mémorable');
 
@@ -127,8 +127,10 @@ const ATTENDU = {
   ev = S.evaluerStat('pts', 40, sE82);
   egal(ev.statut, 'decevante', '40 pts → Décevante');
   egal(ev.mods, -20, 'ModS -20 pour une Décevante');
+  ev = S.evaluerStat('shotpct', 15.7, S.seuilsMatrice('ELITE','shotpct',82));
+  egal(ev.statut, 'excellente', 'PCTG 15,7 sur seuils OV 82 → Excellente (seuil E = 15,62875, révision 2026)');
   ev = S.evaluerStat('shotpct', 15.2, S.seuilsMatrice('ELITE','shotpct',82));
-  egal(ev.statut, 'excellente', 'PCTG 15,2 sur seuils OV 82 → Excellente');
+  egal(ev.statut, 'satisfaisante', 'PCTG 15,2 sur seuils OV 82 → Satisfaisante (sous le seuil E fin)');
   ev = S.evaluerStat('pts', null, sE82);
   egal(ev.statut, 'indef', 'Sans valeur → à définir');
 
@@ -230,7 +232,7 @@ const ATTENDU = {
   const jk = joueurDe('Jesperi Kotkaniemi');
   jk._profil = S.determinerProfil(jk);
   let s = S.seuilsPour(jk, 'pts', {}, {});
-  tableauEgal(s.seuils, [97,86,74,63,37,-1], 'Seuils Y17 par défaut (OV 82)');
+  tableauEgal(s.seuils, [91,81,70,60,35,-1], 'Seuils par défaut (OV 82, révision 2026)');
   egal(s.source, 'Y17', 'Source = Y17');
   const perso = {ELITE: {pts: {82: [100,90,80,70,40,-1]}}};
   s = S.seuilsPour(jk, 'pts', perso, {});
@@ -238,7 +240,7 @@ const ATTENDU = {
   egal(s.source, 'personnalisée', 'Source = personnalisée');
   s = S.seuilsPour(jk, 'pts', {}, {[S.normaliserNom(jk.nom)]: {pts: 120}});
   egal(s.seuils[0], 120, 'La surcharge fixe le seuil Mémorable');
-  egal(s.seuils[2], 74, 'Les autres degrés restent ceux de la matrice');
+  egal(s.seuils[2], 70, 'Les autres degrés restent ceux de la matrice (révision 2026)');
 
   console.log('— Parseur de formation (fixture HTML réaliste)');
   const fixtureRoster = `<html><body><table>
@@ -1019,6 +1021,105 @@ const ATTENDU = {
 
   W.localStorage.removeItem(S.CLES_LS.compo);
   W.localStorage.removeItem(S.CLES_LS.trios);
+
+  console.log('— Charte salariale officielle Y22 (transcription fidèle de la charte publiée, cap 104 M)');
+  const CS_ATTENDU = {
+    RFA:      [700,775,825,950,2250,3750,5750,7500,8750,10500,12250,13750,15500,17500],
+    UFA_34:   [900,950,1150,1500,2250,3500,5000,6250,7500,8750,10250,12000,13500,15500],
+    UFA_35:   [900,900,1000,1100,1750,2250,3250,4250,5000,6000,7250,8750,10000,11500],
+    UFAR2_34: [900,900,950,1150,1500,2500,3500,5000,6250,7500,8750,10250,12000,13500],
+    UFAR2_35: [900,900,900,1000,1100,1750,2250,3250,4250,5000,6000,7250,8750,10000],
+    SANS_34:  [900,900,900,950,1150,1500,2500,3500,5000,6250,7500,8750,10250,12000],
+    SANS_35:  [900,900,900,900,1000,1100,1750,2250,3250,4250,5000,6000,7250,8750]
+  };
+  tableauEgal(S.CHARTE_SALAIRE.RFA, CS_ATTENDU.RFA, 'Colonne RFA 28 ans et - (6.4.1)');
+  tableauEgal(S.CHARTE_SALAIRE.UFA_34, CS_ATTENDU.UFA_34, 'Colonne UFA 34 ans et - (6.4.2)');
+  tableauEgal(S.CHARTE_SALAIRE.UFA_35, CS_ATTENDU.UFA_35, 'Colonne UFA 35 et + (6.4.2)');
+  tableauEgal(S.CHARTE_SALAIRE.UFAR2_34, CS_ATTENDU.UFAR2_34, 'Colonne UFA Ronde 2 34 ans et - (6.4.3)');
+  tableauEgal(S.CHARTE_SALAIRE.UFAR2_35, CS_ATTENDU.UFAR2_35, 'Colonne UFA Ronde 2 35 et + (6.4.3)');
+  tableauEgal(S.CHARTE_SALAIRE.SANS_34, CS_ATTENDU.SANS_34, 'Colonne Sans contrat 34 ans et - (6.4.4)');
+  tableauEgal(S.CHARTE_SALAIRE.SANS_35, CS_ATTENDU.SANS_35,
+    'Colonne Sans contrat 35 et + (6.4.4) — OV 77 et 87+ selon la charte officielle, OV 85 à 6 000 (coquille du document corrigée)');
+
+  console.log('— Verdicts face à la charte (fixtures synthétiques, indépendantes de l\'équipe)');
+  const vSur = S.verdictCharte({nom:'Attaquant témoin', po:'C', ov:81, age:29, salaire:7500000, ct:1}, 'UFA', 1);
+  egal(vSur.code, 'surpaye', 'Patineur OV 81, 29 ans, 7,5 M en UFA → Surpayé');
+  egal(vSur.minEff, 6250000, 'Charte applicable : 6 250 000 $ (UFA 34-)');
+  egal(vSur.ecart, 1250000, 'Écart : +1 250 000 $');
+  const vAub = S.verdictCharte({nom:'Recrue témoin', po:'C', ov:77, age:23, salaire:900000, ct:1}, 'RFA', 1);
+  egal(vAub.code, 'aubaine', 'Patineur OV 77, 23 ans, 900 k en RFA → Aubaine salariale');
+  egal(vAub.ecart, 50000, 'Écart : −50 000 $ sous la charte (950 k)');
+  const vExact = S.verdictCharte({nom:'Témoin', po:'C', ov:80, age:26, salaire:5750000, ct:1}, 'RFA', 1);
+  egal(vExact.code, 'charte', 'Patineur au salaire exact de sa case (OV 80 RFA, 5,75 M) → Sur la charte');
+  egal(vExact.ecart, 0, 'Aucun écart pour un contrat sur la charte');
+
+  console.log('— Règle des gardiens : échelon OV −1, peu importe la charte');
+  const vGA = S.verdictCharte({nom:'G témoin A', po:'G', ov:78, age:32, salaire:1250000, ct:1}, 'UFA', 1);
+  egal(vGA.minEff, 1500000, 'Gardien OV 78, 32 ans évalué à l\'échelon 77 : 1 500 000 $');
+  egal(vGA.code, 'aubaine', 'Gardien à 1,25 M → Aubaine salariale');
+  const gRabais = {nom:'G témoin B', po:'G', ov:80, age:30, salaire:3500000, ct:1};
+  const vRab = S.verdictCharte(gRabais, 'UFA', 1);
+  egal(vRab.code, 'charte', 'Gardien payé à l\'échelon OV −1 (3,5 M pour OV 80 UFA) → Sur la charte');
+  ok(vRab.detail.includes('rabais gardien'), 'Note du rabais gardien affichée');
+  const vPlein = S.verdictCharte({...gRabais, salaire:5000000}, 'UFA', 1);
+  egal(vPlein.code, 'charte', 'Gardien payé à l\'échelon plein (5 M pour OV 80 UFA) → Sur la charte');
+  ok(vPlein.detail.includes('échelon plein'), 'Note de l\'échelon plein affichée');
+  egal(S.verdictCharte({...gRabais, salaire:5100000}, 'UFA', 1).code, 'surpaye',
+    'Gardien au-dessus de l\'échelon plein → Surpayé');
+  egal(S.verdictCharte({...gRabais, salaire:3400000}, 'UFA', 1).code, 'aubaine',
+    'Gardien sous l\'échelon gardien → Aubaine salariale');
+  egal(S.salaireMinimum(74, 'UFA', 32, 1, 'G'), 900000,
+    'Gardien OV 74 : échelon 73 borné à la ligne 74- (900 k)');
+
+  console.log('— Bornes et bonus d\'échelon');
+  egal(S.salaireMinimum(90, 'RFA', 24, 1, 'C'), 17500000, 'OV 90 borné à la ligne 87+ (RFA : 17,5 M)');
+  egal(S.salaireMinimum(78, 'RFA', 24, 5, 'C'), 5750000, 'RFA 5 ans : échelon 78+2=80 (5,75 M)');
+  egal(S.rangCharte(74), 0, 'Rang de la ligne 74-');
+  egal(S.rangCharte(87), 13, 'Rang de la ligne 87+');
+  egal(S.etiquetteOvCharte(0), '74-', 'Étiquette de la première ligne');
+  egal(S.etiquetteOvCharte(13), '87+', 'Étiquette de la dernière ligne');
+  egal(S.verdictCharte({nom:'Backup témoin', po:'C', ov:55, age:25, salaire:0, ct:0, backup:true}, 'RFA', 1), null,
+    'Les joueurs de remplacement (backup) sont inanalysables');
+
+  console.log('— Vue Charte salariale (DOM)');
+  const btnCharte = doc.querySelector('nav button[data-vue="charte"]');
+  ok(!!btnCharte, 'Bouton de navigation «Charte salariale» présent');
+  ok(!!doc.getElementById('vue-charte'), 'Section vue-charte présente');
+  btnCharte.click();
+  ok(doc.getElementById('vue-charte').classList.contains('actif'), 'La vue Charte s\'active au clic');
+  egal(doc.querySelectorAll('#csTableau tbody tr').length, 14, '14 lignes d\'OV (74- à 87+) dans le tableau');
+  egal(doc.querySelectorAll('#csTableau tbody tr:first-child td').length, 8, '8 cellules par ligne (OV + 7 colonnes)');
+  const analysables = S.ETAT.roster.filter(j=>!j.backup && j.salaire>0);
+  egal(doc.querySelectorAll('#csApercu tbody tr').length, analysables.length,
+    'Aperçu de l\'alignement : ' + analysables.length + ' contrats analysés');
+
+  const temoinDom = analysables[0];
+  const selJoueur = doc.getElementById('csJoueur');
+  selJoueur.value = temoinDom.nom;
+  selJoueur.dispatchEvent(new W.Event('change'));
+  const statutAttendu = temoinDom.age <= 28 ? 'RFA' : 'UFA';
+  egal(doc.getElementById('csStatut').value, statutAttendu,
+    'Charte ' + statutAttendu + ' proposée d\'après l\'âge (' + temoinDom.age + ' ans) pour ' + temoinDom.nom);
+  ok(['charte','surpaye','aubaine'].some(c=>doc.getElementById('csVerdict').classList.contains(c)),
+    'Verdict affiché pour ' + temoinDom.nom);
+  ok(!!doc.querySelector('#csTableau td.cs-actif'), 'Cellule applicable mise en surbrillance dans le tableau');
+  ok(doc.querySelectorAll('#csTableau tr.cs-rang-actif').length === 1, 'Une seule ligne d\'OV en surbrillance');
+  // contre-vérification indépendante du minimum affiché, à partir des tableaux du harnais
+  const dureeDom = Number(doc.getElementById('csDuree').value) || 1;
+  const cleDom = statutAttendu === 'RFA' ? 'RFA' : 'UFA_' + (temoinDom.age >= 35 ? '35' : '34');
+  let ovEffDom = temoinDom.ov + (temoinDom.po === 'G' ? -1 : 0) +
+    (statutAttendu === 'RFA' && dureeDom > 3 ? dureeDom - 3 : 0);
+  const idxDom = Math.max(0, Math.min(13, ovEffDom - 74));
+  egal(S.verdictCharte(temoinDom, statutAttendu, dureeDom).minEff, CS_ATTENDU[cleDom][idxDom] * 1000,
+    'Minimum de ' + temoinDom.nom + ' recoupé avec la charte du harnais (' + cleDom + ', ligne ' + S.etiquetteOvCharte(idxDom) + ')');
+
+  doc.getElementById('csStatut').value = 'UFAR2';
+  doc.getElementById('csStatut').dispatchEvent(new W.Event('change'));
+  egal(doc.querySelectorAll('#csDuree option').length, 2, 'UFA Ronde 2 : durées limitées à 1-2 ans');
+  doc.getElementById('csStatut').value = 'SANS';
+  doc.getElementById('csStatut').dispatchEvent(new W.Event('change'));
+  egal(doc.querySelectorAll('#csDuree option').length, 1, 'Sans contrat : 1 an seulement');
+
 
   console.log(`\n${total - echecs}/${total} vérifications réussies`);
   process.exit(echecs ? 1 : 0);
