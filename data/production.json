@@ -1,87 +1,100 @@
 {
- "genere": "2026-11-10T11:39:28.821Z",
+ "genere": "2026-11-12T11:44:29.797Z",
  "equipe": "ISLANDERS",
- "fiche": "ISLANDERS 8-4-2",
+ "fiche": "ISLANDERS 8-5-2",
  "pointage": {
-  "releve": "2026-11-10T11:39:28.821Z",
+  "releve": "2026-11-12T11:44:29.797Z",
   "patineurs": [
    {
     "nom": "Seth Jarvis",
-    "gp": 14,
+    "gp": 15,
     "goals": 4,
     "assists": 11,
     "pts": 15,
-    "plusminus": 4,
+    "plusminus": 1,
     "pim": 2,
     "ppg": 0,
     "gwg": 0,
-    "shots": 38,
-    "hits": 18
+    "shots": 40,
+    "hits": 20
    },
    {
     "nom": "Alex DeBrincat",
-    "gp": 13,
+    "gp": 14,
     "goals": 6,
     "assists": 7,
     "pts": 13,
-    "plusminus": 7,
+    "plusminus": 4,
     "pim": 6,
     "ppg": 0,
     "gwg": 2,
-    "shots": 35,
-    "hits": 18
+    "shots": 37,
+    "hits": 19
    },
    {
     "nom": "Ryan Leonard",
-    "gp": 14,
+    "gp": 15,
     "goals": 6,
-    "assists": 6,
-    "pts": 12,
+    "assists": 7,
+    "pts": 13,
     "plusminus": 4,
     "pim": 2,
     "ppg": 3,
     "gwg": 0,
-    "shots": 35,
-    "hits": 29
+    "shots": 38,
+    "hits": 30
    },
    {
     "nom": "Ivan Demidov",
-    "gp": 14,
+    "gp": 15,
     "goals": 5,
-    "assists": 6,
-    "pts": 11,
+    "assists": 7,
+    "pts": 12,
     "plusminus": 6,
     "pim": 0,
     "ppg": 0,
     "gwg": 0,
-    "shots": 29,
-    "hits": 12
-   },
-   {
-    "nom": "Nick Paul",
-    "gp": 14,
-    "goals": 4,
-    "assists": 7,
-    "pts": 11,
-    "plusminus": 7,
-    "pim": 2,
-    "ppg": 0,
-    "gwg": 0,
-    "shots": 14,
+    "shots": 30,
     "hits": 13
    },
    {
     "nom": "Berkly Catton",
-    "gp": 14,
-    "goals": 5,
+    "gp": 15,
+    "goals": 6,
     "assists": 5,
-    "pts": 10,
+    "pts": 11,
     "plusminus": 4,
     "pim": 4,
     "ppg": 1,
     "gwg": 1,
-    "shots": 30,
+    "shots": 33,
     "hits": 7
+   },
+   {
+    "nom": "Nick Paul",
+    "gp": 15,
+    "goals": 4,
+    "assists": 7,
+    "pts": 11,
+    "plusminus": 5,
+    "pim": 2,
+    "ppg": 0,
+    "gwg": 0,
+    "shots": 15,
+    "hits": 14
+   },
+   {
+    "nom": "Nick Schmaltz",
+    "gp": 15,
+    "goals": 2,
+    "assists": 9,
+    "pts": 11,
+    "plusminus": 3,
+    "pim": 10,
+    "ppg": 0,
+    "gwg": 0,
+    "shots": 28,
+    "hits": 17
    },
    {
     "nom": "Jack Hughes",
@@ -95,19 +108,6 @@
     "gwg": 0,
     "shots": 38,
     "hits": 14
-   },
-   {
-    "nom": "Nick Schmaltz",
-    "gp": 14,
-    "goals": 1,
-    "assists": 8,
-    "pts": 9,
-    "plusminus": 2,
-    "pim": 10,
-    "ppg": 0,
-    "gwg": 0,
-    "shots": 26,
-    "hits": 17
    },
    {
     "nom": "Connor McMichael",
@@ -124,7 +124,7 @@
    },
    {
     "nom": "Roman Josi",
-    "gp": 12,
+    "gp": 13,
     "goals": 1,
     "assists": 7,
     "pts": 8,
@@ -137,98 +137,98 @@
    },
    {
     "nom": "Zach Hyman",
-    "gp": 14,
+    "gp": 15,
     "goals": 4,
     "assists": 3,
     "pts": 7,
-    "plusminus": 1,
+    "plusminus": -2,
     "pim": 4,
     "ppg": 0,
     "gwg": 3,
-    "shots": 34,
-    "hits": 19
+    "shots": 36,
+    "hits": 21
    },
    {
     "nom": "Moritz Seider",
-    "gp": 14,
+    "gp": 15,
     "goals": 4,
     "assists": 2,
     "pts": 6,
-    "plusminus": 5,
+    "plusminus": 3,
     "pim": 17,
     "ppg": 0,
     "gwg": 1,
-    "shots": 27,
-    "hits": 41
+    "shots": 28,
+    "hits": 43
    },
    {
     "nom": "Kaiden Guhle",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 5,
     "pts": 5,
     "plusminus": 11,
-    "pim": 12,
+    "pim": 14,
     "ppg": 0,
     "gwg": 0,
-    "shots": 20,
-    "hits": 39
+    "shots": 21,
+    "hits": 42
    },
    {
     "nom": "Janis Jerome Moser",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 4,
     "pts": 4,
-    "plusminus": -1,
+    "plusminus": -3,
     "pim": 9,
     "ppg": 0,
     "gwg": 0,
     "shots": 13,
-    "hits": 29
+    "hits": 30
    },
    {
     "nom": "Sam Rinzel",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 3,
     "pts": 3,
-    "plusminus": 4,
-    "pim": 4,
+    "plusminus": 2,
+    "pim": 8,
     "ppg": 0,
     "gwg": 0,
-    "shots": 16,
-    "hits": 9
+    "shots": 19,
+    "hits": 10
    },
    {
     "nom": "Vincent Desharnais",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 3,
     "pts": 3,
-    "plusminus": -1,
+    "plusminus": -3,
     "pim": 0,
     "ppg": 0,
     "gwg": 0,
     "shots": 8,
-    "hits": 12
+    "hits": 15
    },
    {
     "nom": "Samuel Savoie",
-    "gp": 3,
+    "gp": 4,
     "goals": 2,
     "assists": 0,
     "pts": 2,
-    "plusminus": 2,
+    "plusminus": 0,
     "pim": 2,
     "ppg": 0,
     "gwg": 0,
     "shots": 5,
-    "hits": 6
+    "hits": 7
    },
    {
     "nom": "Kirill Marchenko",
-    "gp": 5,
+    "gp": 6,
     "goals": 0,
     "assists": 1,
     "pts": 1,
@@ -241,7 +241,7 @@
    },
    {
     "nom": "Parker Kelly",
-    "gp": 14,
+    "gp": 15,
     "goals": 1,
     "assists": 0,
     "pts": 1,
@@ -250,11 +250,11 @@
     "ppg": 0,
     "gwg": 0,
     "shots": 2,
-    "hits": 3
+    "hits": 4
    },
    {
     "nom": "Marcus Pettersson",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 1,
     "pts": 1,
@@ -262,8 +262,8 @@
     "pim": 6,
     "ppg": 0,
     "gwg": 0,
-    "shots": 19,
-    "hits": 20
+    "shots": 22,
+    "hits": 23
    },
    {
     "nom": "Back Up C",
@@ -282,27 +282,27 @@
   "gardiens": [
    {
     "nom": "Jiri Patera",
-    "gp": 1,
-    "pim": 0,
-    "w": 0,
-    "l": 0,
-    "t": 0,
-    "avg": 0,
-    "svpct": 1,
-    "so": 0,
-    "mp": 3
-   },
-   {
-    "nom": "Anton Forsberg",
     "gp": 2,
     "pim": 0,
     "w": 0,
     "l": 1,
     "t": 0,
-    "avg": 4.17,
-    "svpct": 0.857,
+    "avg": 6.67,
+    "svpct": 0.808,
     "so": 0,
-    "mp": 72
+    "mp": 45
+   },
+   {
+    "nom": "Anton Forsberg",
+    "gp": 3,
+    "pim": 0,
+    "w": 0,
+    "l": 1,
+    "t": 0,
+    "avg": 4.67,
+    "svpct": 0.854,
+    "so": 0,
+    "mp": 90
    },
    {
     "nom": "Connor Hellebuyck",
@@ -319,25 +319,25 @@
   ]
  },
  "xtra": {
-  "releve": "2026-11-10T11:39:28.821Z",
-  "date": "11/10/2026",
+  "releve": "2026-11-12T11:44:29.797Z",
+  "date": "11/12/2026",
   "joueurs": [
    {
     "nom": "Alex DeBrincat",
     "pos": "RW",
-    "gp": 13,
+    "gp": 14,
     "goals": 6,
     "assists": 7,
     "pts": 13,
-    "shots": 35,
+    "shots": 37,
     "pim": 6,
-    "mp": 280,
-    "hits": 18
+    "mp": 302,
+    "hits": 19
    },
    {
     "nom": "Anton Forsberg",
     "pos": "G",
-    "gp": 2,
+    "gp": 3,
     "goals": 0,
     "assists": 0,
     "pts": 0,
@@ -351,25 +351,25 @@
    {
     "nom": "Back Up C",
     "pos": "C",
-    "gp": 1,
+    "gp": 2,
     "goals": 0,
     "assists": 0,
     "pts": 0,
     "shots": 1,
     "pim": 0,
-    "mp": 6,
+    "mp": 9,
     "hits": 0
    },
    {
     "nom": "Berkly Catton",
     "pos": "LW",
-    "gp": 14,
-    "goals": 5,
+    "gp": 15,
+    "goals": 6,
     "assists": 5,
-    "pts": 10,
-    "shots": 30,
+    "pts": 11,
+    "shots": 33,
     "pim": 4,
-    "mp": 244,
+    "mp": 263,
     "hits": 7
    },
    {
@@ -401,14 +401,14 @@
    {
     "nom": "Ivan Demidov",
     "pos": "LW",
-    "gp": 14,
+    "gp": 15,
     "goals": 5,
-    "assists": 6,
-    "pts": 11,
-    "shots": 29,
+    "assists": 7,
+    "pts": 12,
+    "shots": 30,
     "pim": 0,
-    "mp": 274,
-    "hits": 12
+    "mp": 292,
+    "hits": 13
    },
    {
     "nom": "Jack Hughes",
@@ -425,19 +425,19 @@
    {
     "nom": "Janis Jerome Moser",
     "pos": "D",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 4,
     "pts": 4,
     "shots": 13,
     "pim": 9,
-    "mp": 235,
-    "hits": 29
+    "mp": 246,
+    "hits": 30
    },
    {
     "nom": "Jiri Patera",
     "pos": "G",
-    "gp": 1,
+    "gp": 2,
     "goals": 0,
     "assists": 0,
     "pts": 0,
@@ -451,19 +451,19 @@
    {
     "nom": "Kaiden Guhle",
     "pos": "D",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 5,
     "pts": 5,
-    "shots": 20,
-    "pim": 12,
-    "mp": 286,
-    "hits": 39
+    "shots": 21,
+    "pim": 14,
+    "mp": 305,
+    "hits": 42
    },
    {
     "nom": "Kirill Marchenko",
     "pos": "RW",
-    "gp": 5,
+    "gp": 6,
     "goals": 0,
     "assists": 1,
     "pts": 1,
@@ -475,146 +475,146 @@
    {
     "nom": "Marcus Pettersson",
     "pos": "D",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 1,
     "pts": 1,
-    "shots": 19,
+    "shots": 22,
     "pim": 6,
-    "mp": 245,
-    "hits": 20
+    "mp": 265,
+    "hits": 23
    },
    {
     "nom": "Moritz Seider",
     "pos": "D",
-    "gp": 14,
+    "gp": 15,
     "goals": 4,
     "assists": 2,
     "pts": 6,
-    "shots": 27,
+    "shots": 28,
     "pim": 17,
-    "mp": 335,
-    "hits": 41
+    "mp": 360,
+    "hits": 43
    },
    {
     "nom": "Nick Paul",
     "pos": "C",
-    "gp": 14,
+    "gp": 15,
     "goals": 4,
     "assists": 7,
     "pts": 11,
-    "shots": 14,
+    "shots": 15,
     "pim": 2,
-    "mp": 136,
-    "hits": 13
+    "mp": 150,
+    "hits": 14
    },
    {
     "nom": "Nick Schmaltz",
     "pos": "C",
-    "gp": 14,
-    "goals": 1,
-    "assists": 8,
-    "pts": 9,
-    "shots": 26,
+    "gp": 15,
+    "goals": 2,
+    "assists": 9,
+    "pts": 11,
+    "shots": 28,
     "pim": 10,
-    "mp": 289,
+    "mp": 314,
     "hits": 17
    },
    {
     "nom": "Parker Kelly",
     "pos": "LW",
-    "gp": 14,
+    "gp": 15,
     "goals": 1,
     "assists": 0,
     "pts": 1,
     "shots": 2,
     "pim": 0,
-    "mp": 35,
-    "hits": 3
+    "mp": 39,
+    "hits": 4
    },
    {
     "nom": "Roman Josi",
     "pos": "D",
-    "gp": 12,
+    "gp": 13,
     "goals": 1,
     "assists": 7,
     "pts": 8,
     "shots": 21,
     "pim": 16,
-    "mp": 208,
+    "mp": 224,
     "hits": 16
    },
    {
     "nom": "Ryan Leonard",
     "pos": "RW",
-    "gp": 14,
+    "gp": 15,
     "goals": 6,
-    "assists": 6,
-    "pts": 12,
-    "shots": 35,
+    "assists": 7,
+    "pts": 13,
+    "shots": 38,
     "pim": 2,
-    "mp": 274,
-    "hits": 29
+    "mp": 290,
+    "hits": 30
    },
    {
     "nom": "Sam Rinzel",
     "pos": "D",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 3,
     "pts": 3,
-    "shots": 16,
-    "pim": 4,
-    "mp": 167,
-    "hits": 9
+    "shots": 19,
+    "pim": 8,
+    "mp": 183,
+    "hits": 10
    },
    {
     "nom": "Samuel Savoie",
     "pos": "LW",
-    "gp": 3,
+    "gp": 4,
     "goals": 2,
     "assists": 0,
     "pts": 2,
     "shots": 5,
     "pim": 2,
-    "mp": 36,
-    "hits": 6
+    "mp": 45,
+    "hits": 7
    },
    {
     "nom": "Seth Jarvis",
     "pos": "C",
-    "gp": 14,
+    "gp": 15,
     "goals": 4,
     "assists": 11,
     "pts": 15,
-    "shots": 38,
+    "shots": 40,
     "pim": 2,
-    "mp": 294,
-    "hits": 18
+    "mp": 319,
+    "hits": 20
    },
    {
     "nom": "Vincent Desharnais",
     "pos": "D",
-    "gp": 14,
+    "gp": 15,
     "goals": 0,
     "assists": 3,
     "pts": 3,
     "shots": 8,
     "pim": 0,
-    "mp": 148,
-    "hits": 12
+    "mp": 161,
+    "hits": 15
    },
    {
     "nom": "Zach Hyman",
     "pos": "RW",
-    "gp": 14,
+    "gp": 15,
     "goals": 4,
     "assists": 3,
     "pts": 7,
-    "shots": 34,
+    "shots": 36,
     "pim": 4,
-    "mp": 219,
-    "hits": 19
+    "mp": 238,
+    "hits": 21
    }
   ]
  },
