@@ -1,9 +1,9 @@
 {
- "genere": "2026-11-26T08:59:55.232Z",
+ "genere": "2026-11-28T11:38:24.351Z",
  "equipe": "ISLANDERS",
  "fiche": "ISLANDERS 12-7-3",
  "pointage": {
-  "releve": "2026-11-26T08:59:55.232Z",
+  "releve": "2026-11-28T11:38:24.351Z",
   "patineurs": [
    {
     "nom": "Ivan Demidov",
@@ -82,19 +82,6 @@
     "gwg": 0,
     "shots": 63,
     "hits": 28
-   },
-   {
-    "nom": "Roman Josi",
-    "gp": 20,
-    "goals": 1,
-    "assists": 12,
-    "pts": 13,
-    "plusminus": 9,
-    "pim": 32,
-    "ppg": 0,
-    "gwg": 1,
-    "shots": 26,
-    "hits": 29
    },
    {
     "nom": "Nick Paul",
@@ -186,6 +173,19 @@
     "gwg": 1,
     "shots": 40,
     "hits": 63
+   },
+   {
+    "nom": "Thomas Harley",
+    "gp": 20,
+    "goals": 2,
+    "assists": 4,
+    "pts": 6,
+    "plusminus": 0,
+    "pim": 8,
+    "ppg": 1,
+    "gwg": 0,
+    "shots": 36,
+    "hits": 23
    },
    {
     "nom": "Janis Jerome Moser",
@@ -319,8 +319,8 @@
   ]
  },
  "xtra": {
-  "releve": "2026-11-26T08:59:55.232Z",
-  "date": "11/26/2026",
+  "releve": "2026-11-28T11:38:24.351Z",
+  "date": "11/28/2026",
   "joueurs": [
    {
     "nom": "Alex DeBrincat",
@@ -533,18 +533,6 @@
     "hits": 9
    },
    {
-    "nom": "Roman Josi",
-    "pos": "D",
-    "gp": 20,
-    "goals": 1,
-    "assists": 12,
-    "pts": 13,
-    "shots": 26,
-    "pim": 32,
-    "mp": 341,
-    "hits": 29
-   },
-   {
     "nom": "Ryan Leonard",
     "pos": "RW",
     "gp": 22,
@@ -591,6 +579,18 @@
     "pim": 2,
     "mp": 467,
     "hits": 28
+   },
+   {
+    "nom": "Thomas Harley",
+    "pos": "D",
+    "gp": 20,
+    "goals": 2,
+    "assists": 4,
+    "pts": 6,
+    "shots": 36,
+    "pim": 8,
+    "mp": 415,
+    "hits": 23
    },
    {
     "nom": "Vincent Desharnais",
